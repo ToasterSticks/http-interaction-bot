@@ -4,4 +4,4 @@ declare global {
 	const PUBLIC_KEY: string;
 }
 
-export {}
+export {};
