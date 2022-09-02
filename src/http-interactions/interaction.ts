@@ -6,8 +6,9 @@ import {
 	APIApplicationCommandInteraction,
 	APIMessageComponentInteraction,
 	APIModalSubmitInteraction,
+	RESTPostAPIInteractionFollowupJSONBody,
 } from 'discord-api-types/v10';
-import { InteractionHandler, InteractionHandlerReturn } from './types';
+import { File, InteractionHandler, InteractionHandlerReturn } from './types';
 import type { CommandStore } from './handler';
 
 const makeValidator =
@@ -29,20 +30,24 @@ const makeValidator =
 
 const isFileUpload = (data: InteractionHandlerReturn) => data.files && data.files.length > 0;
 
-const formDataResponse = (data: InteractionHandlerReturn) => {
+export const formDataResponse = (
+	data: InteractionHandlerReturn | (RESTPostAPIInteractionFollowupJSONBody & { files?: File[] })
+) => {
 	const formData = new FormData();
 
-	data.files?.forEach((file) => formData.append(file.name, new Blob([file.data]), file.name));
-	delete data.files;
+	if (data.files) {
+		for (const file of data.files) formData.append(file.name, new Blob([file.data]), file.name);
+		delete data.files;
+	}
 
 	formData.append('payload_json', JSON.stringify(data));
 
-	return new Response(formData);
+	return formData;
 };
 
-const jsonResponse = (data: InteractionHandlerReturn) =>
+const createResponse = (data: InteractionHandlerReturn) =>
 	isFileUpload(data)
-		? formDataResponse(data)
+		? new Response(formDataResponse(data))
 		: new Response(JSON.stringify(data), {
 				headers: { 'Content-Type': 'application/json' },
 		  });
@@ -53,7 +58,6 @@ export const interaction = ({
 }: {
 	publicKey: string;
 	commands: CommandStore;
-	components?: { [key: string]: InteractionHandler };
 }) => {
 	return async (request: Request): Promise<Response> => {
 		const validateRequest = makeValidator({ publicKey });
@@ -71,7 +75,7 @@ export const interaction = ({
 
 				switch (interaction.type) {
 					case InteractionType.Ping: {
-						return jsonResponse({ type: 1 });
+						return createResponse({ type: 1 });
 					}
 					case InteractionType.ApplicationCommand: {
 						if (!interaction.data?.name) break;
@@ -93,7 +97,7 @@ export const interaction = ({
 				}
 				if (!handler) return new Response(null, { status: 500 });
 				// @ts-expect-error
-				return jsonResponse(await handler(interaction));
+				return createResponse(await handler(interaction));
 			} catch {
 				return new Response(null, { status: 400 });
 			}
