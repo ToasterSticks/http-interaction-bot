@@ -1,9 +1,10 @@
-import {
+import type {
 	APIApplicationCommandInteractionDataBasicOption,
 	APIApplicationCommandInteractionDataOption,
 	APIApplicationCommandInteractionDataSubcommandOption,
 	APIInteractionResponse,
-	APIModalSubmission,
+	APIModalSubmission} from 'discord-api-types/v10';
+import {
 	InteractionResponseType,
 	RouteBases,
 } from 'discord-api-types/v10';
