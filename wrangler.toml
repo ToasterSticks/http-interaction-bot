@@ -4,4 +4,4 @@ name        = "http-interaction-bot"
 workers_dev = true
 
 [build]
-  command = "npm install && npm run build"
+  command = "yarn install && yarn build"
