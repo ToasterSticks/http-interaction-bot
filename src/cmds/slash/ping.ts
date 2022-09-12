@@ -6,7 +6,8 @@ import type { Command } from '../../http-interactions';
 export const command: Command<ApplicationCommandType.ChatInput> = {
 	name: 'ping',
 	description: 'Reply with pong',
-	handler: ({ member }) => {
+
+	exec: ({ member }) => {
 		const userID = member!.user.id;
 
 		return {
