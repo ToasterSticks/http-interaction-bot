@@ -1,13 +1,13 @@
+import {
+	InteractionType,
+	type APIInteraction,
+	type APIApplicationCommandInteraction,
+	type APIMessageComponentInteraction,
+	type APIModalSubmitInteraction,
+	type RESTPostAPIInteractionFollowupJSONBody,
+} from 'discord-api-types/v10';
 import nacl from 'tweetnacl';
 import { Buffer } from 'buffer';
-import type {
-	APIInteraction,
-	APIApplicationCommandInteraction,
-	APIMessageComponentInteraction,
-	APIModalSubmitInteraction,
-	RESTPostAPIInteractionFollowupJSONBody,
-} from 'discord-api-types/v10';
-import { InteractionType } from 'discord-api-types/v10';
 import type { File, InteractionHandler, InteractionHandlerReturn } from './types';
 import type { CommandStore } from './handler';
 

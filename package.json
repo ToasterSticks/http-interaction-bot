@@ -51,6 +51,7 @@
 			"@typescript-eslint/consistent-type-imports": "error",
 			"@typescript-eslint/consistent-type-exports": "error",
 			"prettier/prettier": "error",
+			"no-duplicate-imports": "error",
 			"one-var": [
 				"error",
 				"never"
