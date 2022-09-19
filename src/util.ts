@@ -48,7 +48,7 @@ export const getOption = <
 };
 
 export const getModalValue = (data: APIModalSubmission, name: string) => {
-	const row = data.components?.find(({ components }) => components[0].custom_id === name);
+	const row = data.components.find(({ components }) => components[0].custom_id === name)!;
 
-	return row?.components[0].value;
+	return row.components[0].value;
 };
